@@ -14,7 +14,7 @@ diabetes_model = pickle.load(open(r'diabetes/diabetes_model.sav', 'rb'))
 parkinson_model = pickle.load(open(r'parkinson disease/parkinson_model.sav', 'rb'))
 heart_model = pickle.load(open(r'heart disease/heart_model.sav', 'rb'))
 
-scaler = pickle.load(open( 'parkinson disease\scalar.sav' ,'rb'))
+scaler = pickle.load(open( r'parkinson disease/scalar.sav' ,'rb'))
 
 # Sidebar navigation
 with st.sidebar:
