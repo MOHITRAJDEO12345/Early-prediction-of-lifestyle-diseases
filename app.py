@@ -6,6 +6,7 @@ from streamlit_option_menu import option_menu
 import time
 
 
+
 # Set page config with icon
 st.set_page_config(page_title="Disease Prediction", page_icon="🩺", layout="wide")
 
@@ -204,9 +205,6 @@ if selected == 'Parkinson Disease Prediction':
 
             with st.spinner("⏳ Predicting... Please wait..."):
                 time.sleep(2)  # Simulating delay (remove in actual use)
-            
-
-
 
             # Make prediction using the trained model
             parkinson_prediction = parkinson_model.predict(std_data)
