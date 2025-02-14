@@ -10,11 +10,11 @@ from streamlit_option_menu import option_menu
 #parkinson_model = joblib.load("C:/Users/mohit/OneDrive/Desktop/streamlit/Multiple Disease Prediction/parkinson disease/parkinson_model.pkl")
 #heart_model = joblib.load("C:/Users/mohit/OneDrive/Desktop/streamlit/Multiple Disease Prediction/heart disease/heart_disease_model.pkl")
 
-diabetes_model = pickle.load(open('C:/Users/mohit/OneDrive/Desktop/streamlit/Multiple Disease Prediction/diabetes/diabetes_model.sav','rb'))
-parkinson_model = pickle.load(open('C:/Users/mohit/OneDrive/Desktop/streamlit/Multiple Disease Prediction/parkinson disease/parkinson_model.sav','rb'))
-heart_model = pickle.load(open('C:/Users/mohit/OneDrive/Desktop/streamlit/Multiple Disease Prediction/heart disease/heart_model.sav','rb'))
+diabetes_model = pickle.load(open('diabetes\diabetes_model.sav','rb'))
+parkinson_model = pickle.load(open('parkinson disease\parkinson_model.sav','rb'))
+heart_model = pickle.load(open('heart disease\heart_model.sav','rb'))
 
-scaler = pickle.load(open( 'C:/Users/mohit/OneDrive/Desktop/streamlit/Multiple Disease Prediction/parkinson disease/scalar.sav' ,'rb'))
+scaler = pickle.load(open( 'parkinson disease\scalar.sav' ,'rb'))
 
 # Sidebar navigation
 with st.sidebar:
