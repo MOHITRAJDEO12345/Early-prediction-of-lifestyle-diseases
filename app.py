@@ -4,8 +4,7 @@ import pickle
 import streamlit as st
 from streamlit_option_menu import option_menu
 import time
-
-
+import matplotlib.pyplot as plt
 
 # Set page config with icon
 st.set_page_config(page_title="Disease Prediction", page_icon="🩺", layout="wide")
@@ -20,7 +19,6 @@ scaler = pickle.load(open('parkinson disease/scalar.sav', 'rb'))
 
 # Sidebar navigation with icons and colors
 with st.sidebar:
-    # st.image("https://cdn-icons-png.flaticon.com/512/2920/2920327.png", width=100)
     st.title("🩺 Disease Prediction")
     
     selected = option_menu(
@@ -60,9 +58,6 @@ if selected == 'Home':
     ⚠ **Disclaimer:** This tool is for educational purposes and should not replace medical advice.
     """)
 
-    # st.image("https://www.niddk.nih.gov/-/media/Images/Health-Information/Diabetes/blood-glucose-levels-chart.jpg", width=700)
-
-
 # 🩸 Diabetes Prediction Page
 if selected == 'Diabetes Prediction':
     st.title('🩸 Diabetes Prediction using ML (SVC)')
@@ -88,19 +83,31 @@ if selected == 'Diabetes Prediction':
         DiabetesPedigreeFunction = safe_float(st.text_input("Diabetes Pedigree Function", "0.5"))
         Age = st.number_input("Enter Age", min_value=10, max_value=100, value=30, step=1)
 
-    if st.button('Diabetes Test Result'):
-        try:
-            input_data = np.array([[Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age]])
-            
-            with st.spinner("⏳ Predicting... Please wait..."):
-                time.sleep(2)  # Simulating delay (remove in actual use)
-                diab_prediction = diabetes_model.predict(input_data)
+    with col1:
+        if st.button('Diabetes Test Result'):
+            try:
+                input_data = np.array([[Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age]])
+                
+                with st.spinner("⏳ Predicting... Please wait..."):
+                    time.sleep(2)  # Simulating delay (remove in actual use)
+                    diab_prediction = diabetes_model.predict(input_data)
 
-            result = "🛑 The person is diabetic" if diab_prediction[0] == 1 else "✅ The person is not diabetic"
-            st.success(result)
+                result = "🛑 The person is diabetic" if diab_prediction[0] == 1 else "✅ The person is not diabetic"
+                st.success(result)
 
-        except Exception as e:
-            st.error(f"❌ Error: {e}")
+            except Exception as e:
+                st.error(f"❌ Error: {e}")
+
+    with col2:
+        if st.button('View Diabetes Graphs'):
+            st.markdown("### Diabetes Graphs")
+            # Placeholder for diabetes graphs
+            fig, ax = plt.subplots()
+            ax.plot([0, 1, 2, 3, 4], [0, 1, 4, 9, 16], label="Glucose Level")
+            ax.set_title("Diabetes Graph Example")
+            ax.set_xlabel("Time")
+            ax.set_ylabel("Glucose Level")
+            st.pyplot(fig)
 
 # ❤️ Heart Disease Prediction Page
 if selected == 'Heart Disease Prediction':
@@ -131,19 +138,30 @@ if selected == 'Heart Disease Prediction':
         slope = safe_float(st.text_input("Slope of Peak Exercise ST Segment (0-2)", "1"))
         ca = safe_float(st.text_input("Number of Major Vessels (0-4)", "0"))
         thal = safe_float(st.text_input("Thalassemia (1 = Normal, 2 = Fixed Defect, 3 = Reversible Defect)", "2"))
+    with col1:
+        if st.button('Heart Disease Test Result'):
+            try:
+                input_data = np.array([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]])
+                with st.spinner("⏳ Predicting... Please wait..."):
+                    time.sleep(2)  # Simulating delay (remove in actual use)
+                heart_prediction = heart_model.predict(input_data)
 
-    if st.button('Heart Disease Test Result'):
-        try:
-            input_data = np.array([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]])
-            with st.spinner("⏳ Predicting... Please wait..."):
-                time.sleep(2)  # Simulating delay (remove in actual use)
-            heart_prediction = heart_model.predict(input_data)
+                result = "🛑 The person has heart disease" if heart_prediction[0] == 1 else "✅ The person does not have heart disease"
+                st.success(result)
 
-            result = "🛑 The person has heart disease" if heart_prediction[0] == 1 else "✅ The person does not have heart disease"
-            st.success(result)
+            except Exception as e:
+                st.error(f"❌ Error: {e}")
 
-        except Exception as e:
-            st.error(f"❌ Error: {e}")
+    with col3:
+        if st.button('View Heart Disease Graphs'):
+            st.markdown("### Heart Disease Graphs")
+            # Placeholder for heart disease graphs
+            fig, ax = plt.subplots()
+            ax.plot([0, 1, 2, 3, 4], [0, 1, 2, 3, 4], label="Heart Rate")
+            ax.set_title("Heart Disease Graph Example")
+            ax.set_xlabel("Time")
+            ax.set_ylabel("Heart Rate")
+            st.pyplot(fig)
 
 # 🧠 Parkinson’s Disease Prediction Page
 if selected == 'Parkinson Disease Prediction':
@@ -191,27 +209,39 @@ if selected == 'Parkinson Disease Prediction':
 
     parkinson_diagnostic = ""
 
-    if st.button('Parkinson Disease Test Result'):
-        try:
-            # Prepare input data for prediction
-            input_data = np.array([[
-                MDVP_Fo, MDVP_Fhi, MDVP_Flo, MDVP_Jitter, MDVP_Jitter_Abs, MDVP_RAP, MDVP_PPQ,
-                Jitter_DDP, MDVP_Shimmer, MDVP_Shimmer_dB, Shimmer_APQ3, Shimmer_APQ5, MDVP_APQ,
-                Shimmer_DDA, NHR, HNR, RPDE, DFA, spread1, spread2, D2, PPE
-            ]])
+    with col3:
+        if st.button('Parkinson Disease Test Result'):
+            try:
+                # Prepare input data for prediction
+                input_data = np.array([[
+                    MDVP_Fo, MDVP_Fhi, MDVP_Flo, MDVP_Jitter, MDVP_Jitter_Abs, MDVP_RAP, MDVP_PPQ,
+                    Jitter_DDP, MDVP_Shimmer, MDVP_Shimmer_dB, Shimmer_APQ3, Shimmer_APQ5, MDVP_APQ,
+                    Shimmer_DDA, NHR, HNR, RPDE, DFA, spread1, spread2, D2, PPE
+                ]])
 
-            # Standardize input data using the saved scaler
-            std_data = scaler.transform(input_data)
+                # Standardize input data using the saved scaler
+                std_data = scaler.transform(input_data)
 
-            with st.spinner("⏳ Predicting... Please wait..."):
-                time.sleep(2)  # Simulating delay (remove in actual use)
+                with st.spinner("⏳ Predicting... Please wait..."):
+                    time.sleep(2)  # Simulating delay (remove in actual use)
 
-            # Make prediction using the trained model
-            parkinson_prediction = parkinson_model.predict(std_data)
+                # Make prediction using the trained model
+                parkinson_prediction = parkinson_model.predict(std_data)
 
-            # Display result
-            parkinson_diagnostic = "🟥 The person has Parkinson’s disease" if parkinson_prediction[0] == 1 else "✅ The person does not have Parkinson’s disease"
-            st.success(parkinson_diagnostic)
+                # Display result
+                parkinson_diagnostic = "🟥 The person has Parkinson’s disease" if parkinson_prediction[0] == 1 else "✅ The person does not have Parkinson’s disease"
+                st.success(parkinson_diagnostic)
 
-        except Exception as e:
-            st.error(f"❌ Error: {e}")
+            except Exception as e:
+                st.error(f"❌ Error: {e}")
+
+    with col4:
+        if st.button('View Parkinson’s Disease Graphs'):
+            st.markdown("### Parkinson’s Disease Graphs")
+            # Placeholder for Parkinson’s disease graphs
+            fig, ax = plt.subplots()
+            ax.plot([0, 1, 2, 3, 4], [0, 1, 0.5, 0.75, 0.25], label="Voice Frequency")
+            ax.set_title("Parkinson’s Disease Graph Example")
+            ax.set_xlabel("Time")
+            ax.set_ylabel("Voice Frequency")
+            st.pyplot(fig)
