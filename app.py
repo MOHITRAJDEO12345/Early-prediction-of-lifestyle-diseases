@@ -17,6 +17,8 @@ heart_model = pickle.load(open('heart disease/heart_model.sav', 'rb'))
 # Load scaler for Parkinson’s model
 scaler = pickle.load(open('parkinson disease/scalar.sav', 'rb'))
 
+
+
 # Sidebar navigation with icons and colors
 with st.sidebar:
     st.title("🩺 Disease Prediction")
@@ -46,6 +48,8 @@ def safe_float(value, default=0.0):
 # 🚀 Home Page
 if selected == 'Home':
     st.title("🩺 Multiple Disease Prediction System")
+
+
     st.markdown("""
     ## Welcome to the **AI-Powered Health Prediction System**!  
     This tool helps in predicting the likelihood of three major diseases using **Machine Learning**:
@@ -55,7 +59,39 @@ if selected == 'Home':
     - **🧠 Parkinson's Disease**
     
     👉 Select a prediction model from the sidebar to proceed!  
-    ⚠ **Disclaimer:** This tool is for educational purposes and should not replace medical advice.
+    """)
+
+    with st.expander("🚀 Quick Start Guide"):
+        st.write("""
+        1. Select a disease prediction model from the sidebar.
+        2. Enter your medical details in the input fields.
+        3. Click the prediction button to get your result.
+        """)
+
+    st.markdown("""
+        ### Learn More
+        - [What is Diabetes?](https://www.example.com)
+        - [Understanding Heart Disease](https://www.example.com)
+        - [Parkinson’s Disease Overview](https://www.example.com)
+        """)
+
+
+    rating = st.slider("⭐ Rate this app", 1, 5)
+    if st.button('Submit Rating'):
+        st.success(f"Thank you for rating us {rating} stars!")
+
+
+    feedback = st.text_area("💬 Provide Feedback", placeholder="How was your experience?")
+    if st.button('Submit Feedback'):
+        st.success("Thank you for your feedback!")
+
+    st.markdown("""
+        ### Contact Us
+        Have questions? Email us at [support@diseaseprediction.com](mailto:support@diseaseprediction.com).
+        """)    
+    st.markdown("---")
+    st.markdown("""
+    **Disclaimer:** This app is for educational purposes only and should not replace professional medical advice.
     """)
 
 # 🩸 Diabetes Prediction Page
@@ -67,6 +103,8 @@ if selected == 'Diabetes Prediction':
     This model predicts the likelihood of **Diabetes** based on various health parameters.  
     Please enter the required medical details below and click **"Diabetes Test Result"** to get the prediction.
     """)
+
+
 
     # Create columns for better input organization
     col1, col2 = st.columns(2)
@@ -92,11 +130,16 @@ if selected == 'Diabetes Prediction':
                     time.sleep(2)  # Simulating delay (remove in actual use)
                     diab_prediction = diabetes_model.predict(input_data)
 
+                
+                
                 result = "🛑 The person is diabetic" if diab_prediction[0] == 1 else "✅ The person is not diabetic"
+                if diab_prediction[0] == 0:
+                    st.balloons()  # Or use st.confetti() if you install the library
                 st.success(result)
 
             except Exception as e:
                 st.error(f"❌ Error: {e}")
+
 
     with col2:
         if st.button('View Diabetes Graphs'):
@@ -147,6 +190,8 @@ if selected == 'Heart Disease Prediction':
                 heart_prediction = heart_model.predict(input_data)
 
                 result = "🛑 The person has heart disease" if heart_prediction[0] == 1 else "✅ The person does not have heart disease"
+                if heart_prediction[0] == 0:
+                    st.balloons()  # Or use st.confetti() if you install the library
                 st.success(result)
 
             except Exception as e:
@@ -229,7 +274,10 @@ if selected == 'Parkinson Disease Prediction':
                 parkinson_prediction = parkinson_model.predict(std_data)
 
                 # Display result
+                
                 parkinson_diagnostic = "🟥 The person has Parkinson’s disease" if parkinson_prediction[0] == 1 else "✅ The person does not have Parkinson’s disease"
+                if parkinson_prediction[0] == 0:
+                    st.balloons()
                 st.success(parkinson_diagnostic)
 
             except Exception as e:
