@@ -1,0 +1,32 @@
+Folder PATH listing for volume OS
+Volume serial number is 362D-640A
+C:.
+¦   app.py
+¦   README.md
+¦   requirements.txt
+¦   streamlit run commands.txt
+¦   tree_structure.txt
+¦   
++---.vscode
++---data_csv
+¦       diabetes.csv
+¦       heart_disease_data.csv
+¦       parkinsons.csv
+¦       
++---diabetes
+¦       diabetes.csv
+¦       diabetes_model.pkl
+¦       diabetes_model.sav
+¦       
++---heart disease
+¦       heart_disease_data.csv
+¦       heart_disease_model.pkl
+¦       heart_model.sav
+¦       
++---parkinson disease
+¦       parkinsons.csv
+¦       parkinson_model.pkl
+¦       parkinson_model.sav
+¦       scalar.sav
+¦       
++---__pycache__
