@@ -1,7 +1,10 @@
+import os
 import numpy as np
+import pandas as pd
 import joblib
 import pickle
 import streamlit as st
+import seaborn as sns
 from streamlit_option_menu import option_menu
 import time
 import matplotlib.pyplot as plt
@@ -25,7 +28,7 @@ with st.sidebar:
     
     selected = option_menu(
         menu_title="Navigation",
-        options=['Home', 'Diabetes Prediction', 'Heart Disease Prediction', 'Parkinson Disease Prediction'],
+        options=['Home', 'Diabetes Prediction', 'Heart Disease Prediction', 'Parkinson Disease Prediction', 'Data Visualization'],
         icons=['house', 'activity', 'heart', 'person'],
         menu_icon="cast",
         default_index=0,
@@ -292,4 +295,80 @@ if selected == 'Parkinson Disease Prediction':
             ax.set_title("Parkinson’s Disease Graph Example")
             ax.set_xlabel("Time")
             ax.set_ylabel("Voice Frequency")
+            st.pyplot(fig)
+
+if selected == 'Data Visualization':
+    # st.set_page_config(page_title="Data Visualizer",
+    #                 page_icon="📊", layout="centered")
+    st.title(" 📊 Data Visualization")
+
+    working_dir = os.path.dirname(os.path.abspath(__file__))
+
+    folder_path = f"{working_dir}/data_csv"
+
+    files_list = [f for f in os.listdir(folder_path) if f.endswith('.csv')]
+
+    selected_file = st.selectbox("Select a file", files_list, index=None)
+
+    if selected_file:
+
+        file_path = os.path.join(folder_path, selected_file)
+
+        df = pd.read_csv(file_path)
+
+        columns = df.columns.tolist()
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.write("")
+            st.write(df.head())
+
+        with col2:
+            x_axis = st.selectbox("Select X-axis", options=columns + ["None"])
+            y_axis = st.selectbox("Select Y-axis", options=columns + ["None"])
+
+            plot_list = ["Line Plot", "Bar Plot", "Scatter Plot", "Histogram", "Box Plot", "Distribution Plot", "Count Plot", "Pair Plot"]
+
+            selected_plot = st.selectbox("Select a plot", options=plot_list, index=None)
+
+            # st.write(x_axis)
+            # st.write(y_axis)
+            # st.write(selected_plot)
+
+        if st.button("Generate Plot"):
+
+            fig, ax = plt.subplots(figsize=(6,4))
+
+            if selected_plot == "Line Plot":
+                sns.lineplot(x=x_axis, y=y_axis, data=df, ax=ax)
+
+            elif selected_plot == "Bar Plot":
+                sns.barplot(x=x_axis, y=y_axis, data=df, ax=ax)
+            
+            elif selected_plot == "Scatter Plot":
+                sns.scatterplot(x=x_axis, y=y_axis, data=df, ax=ax)
+            
+            elif selected_plot == "Histogram":
+                sns.histplot(df[x_axis], ax=ax)
+            
+            elif selected_plot == "Box Plot":
+                sns.boxplot(x=x_axis, y=y_axis, data=df, ax=ax)
+
+            elif selected_plot == "Distribution Plot":
+                sns.kdeplot(df[x_axis], ax=ax)
+            
+            elif selected_plot == "Count Plot":
+                sns.countplot(x=x_axis, data=df, ax=ax)
+            
+            elif selected_plot == "Pair Plot":
+                sns.pairplot(df, ax=ax)
+
+            ax.tick_params(axis="x", labelsize=10)
+            ax.tick_params(axis="y", labelsize=10)
+
+            plt.title(f"{selected_plot} of {x_axis} vs {y_axis}", fontsize=12)
+            plt.xlabel(x_axis, fontsize=10)
+            plt.ylabel(y_axis, fontsize=10)
+
             st.pyplot(fig)
