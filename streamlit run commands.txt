@@ -1,2 +1,1 @@
-cd C:\Users\mohit\OneDrive\Desktop\streamlit\early prediction lv 0\Early-prediction-of-lifestyle-diseases
 streamlit run app.py
