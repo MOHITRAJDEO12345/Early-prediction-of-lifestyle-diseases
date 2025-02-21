@@ -8,6 +8,11 @@ import seaborn as sns
 from streamlit_option_menu import option_menu
 import time
 import matplotlib.pyplot as plt
+import json
+import google.generativeai as genai
+from dotenv import load_dotenv
+
+
 
 # Set page config with icon
 st.set_page_config(page_title="Disease Prediction", page_icon="🩺", layout="wide")
@@ -28,7 +33,7 @@ with st.sidebar:
     
     selected = option_menu(
         menu_title="Navigation",
-        options=['Home', 'Diabetes Prediction', 'Heart Disease Prediction', 'Parkinson Disease Prediction', 'Data Visualization'],
+        options=['Home', 'Diabetes Prediction', 'Heart Disease Prediction', 'Parkinson Disease Prediction', 'Data Visualization', 'Chat with us'],
         icons=['house', 'activity', 'heart', 'person'],
         menu_icon="cast",
         default_index=0,
@@ -372,3 +377,109 @@ if selected == 'Data Visualization':
             plt.ylabel(y_axis, fontsize=10)
 
             st.pyplot(fig)
+
+
+if selected == 'Chat with us':
+    st.title("👩‍💻 Chat with us")
+    st.markdown("### Let's chat about your health concerns!")
+    st.write("Please enter your message below and we'll get back to you shortly.")
+
+    load_dotenv()
+
+# Get the Gemini API key
+    api_key = os.getenv("GEMINI_API_KEY")
+
+    if not api_key:
+        st.error("API Key not found! Please check your .env file.")
+        st.stop()
+
+# Configure Gemini API
+    genai.configure(api_key=api_key)
+
+    # Streamlit UI for Health Chatbot
+    selected = "Chat with us"  # Ensure this matches your navigation logic
+
+    if selected == "Chat with us":
+        # Custom Styling
+        st.markdown("""
+            <style>
+                body { background-color: #1e1e1e; color: #ffffff; }
+                .stChatMessage { font-size: 16px; }
+                .prompt-box { 
+                    background-color: #333333; 
+                    padding: 10px; 
+                    border-radius: 8px; 
+                    font-size: 14px; 
+                    font-family: monospace;
+                    margin-bottom: 10px;
+                }
+                .copy-button {
+                    background-color: #444444;
+                    color: white;
+                    border: none;
+                    padding: 5px 10px;
+                    border-radius: 5px;
+                    font-size: 12px;
+                    cursor: pointer;
+                    margin-top: 5px;
+                }
+                .copy-button:hover {
+                    background-color: #666666;
+                }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st.title("🩺 Health Specialist Chatbot")
+        st.markdown("### Get expert advice on Heart Disease, Diabetes, and Parkinson’s!")
+        st.write("Ask me about symptoms, diet, exercise, and lifestyle recommendations.")
+
+        # Predefined Prompts
+        st.markdown("#### 💡 Quick Prompts (Click to Copy)")
+        
+        prompt_options = {
+            "🍏 Diet Advice": "What foods should I eat if I have diabetes?",
+            "🏋️ Physical Well-being": "What exercises are good for heart health?",
+            "🩺 Symptoms Check": "I have fatigue and dizziness. Could it be related to heart disease?"
+        }
+
+        for label, prompt in prompt_options.items():
+            st.markdown(f"""
+            <div class="prompt-box">
+                <strong>{label}</strong><br>
+                {prompt}
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.code(prompt, language="text")
+
+        # Initialize chat history if not present
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+
+        # Display previous chat history
+        for message in st.session_state.chat_history:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        # User input field
+        user_prompt = st.chat_input("Ask about your health...")
+
+        if user_prompt:
+            # Display user message
+            st.chat_message("user").markdown(user_prompt)
+            st.session_state.chat_history.append({"role": "user", "content": user_prompt})
+
+            # Gemini API request
+            model = genai.GenerativeModel("gemini-pro")
+            response = model.generate_content(user_prompt)
+
+            if response and hasattr(response, "text"):
+                assistant_response = response.text
+            else:
+                assistant_response = "I'm sorry, I couldn't generate a response."
+
+            st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
+
+            # Display assistant's response
+            with st.chat_message("assistant"):
+                st.markdown(assistant_response)

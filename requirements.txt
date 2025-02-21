@@ -5,3 +5,5 @@ streamlit-option-menu
 seaborn
 matplotlib
 pandas
+google-generativeai
+python-dotenv
